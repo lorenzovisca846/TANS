@@ -2,5 +2,6 @@
 *.d
 *.so
 *~
-.vscode/**
+.vscode
+.vscode/** */
 pyroot_env/**
