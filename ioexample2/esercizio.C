@@ -52,9 +52,11 @@ void esercizio(const string& fimpName, const string& histName)
         return;
     }
     double x, min, max;
+    int count = 0;
 
     if(in >> x)
     {
+        count++;
         min = x;
         max = x;
     }
@@ -66,6 +68,7 @@ void esercizio(const string& fimpName, const string& histName)
 
     while(in >> x)
     {
+        count++;
         if(x < min) min = x;
         if(x > max) max = x;
     }
@@ -73,17 +76,14 @@ void esercizio(const string& fimpName, const string& histName)
     in.clear();
     in.seekg(0, ios::beg);
 
+    cout << "\nDati letti: " << count << "\nEstremi dell'istogramma: (" << min << ", " << max << ")" << "\n\n";
+
     TH1D* hist;
     hist = new TH1D("hist", "Istogramma", 100, min, max);
 
-    int count = 0;
     while(in >> x)
-    {
-        count++;
         hist->Fill(x);
-    }
 
-    cout << "Dati letti: " << count << endl;
     in.close();
     hist->Draw();
 
