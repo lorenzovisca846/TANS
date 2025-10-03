@@ -1,3 +1,8 @@
+/*
+CODICE 1: gestione di file di input e output in C++ (senza ROOT)
+*/
+
+
 #include <iostream>
 #include <fstream>
 #include <string>

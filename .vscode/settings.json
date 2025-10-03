@@ -9,6 +9,10 @@
         "iostream": "cpp",
         "ioexample2.C": "cpp",
         "ioexbis.C": "cpp",
-        "esercizio.C": "cpp"
+        "esercizio.C": "cpp",
+        "esercizio copy.C": "cpp",
+        "esercizio_v2.C": "cpp",
+        "esercizio1_v1.C": "cpp",
+        "esercizio1_v2.C": "cpp"
     }
 }
