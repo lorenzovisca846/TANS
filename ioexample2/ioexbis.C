@@ -37,7 +37,7 @@ Semplicemente dichiarando il file prima di creare l'istogramma, l'istogramma vie
     }
     cout << "Dati letti: " << count << endl;
     in.close();
-    hist->DrawCopy();
+    hist->Draw();
     file.Write();
 /*
 Utilizzando file.Write() senza argomenti, vengono scritti tutti gli oggetti associati al file.

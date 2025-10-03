@@ -43,7 +43,7 @@ Per evitare questo possiamo fare hh->SetDirectory(NULL); che lo scollega dal fil
 */
 
 
-void esercizio(const string& fimpName, const string& histName)
+void esercizio1_v1(const string& fimpName, const string& histName)
 {
     ifstream in(fimpName);
     if (!in)
