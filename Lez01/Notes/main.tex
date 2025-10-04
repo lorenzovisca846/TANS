@@ -1,5 +1,47 @@
 \documentclass{article}
-\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{anysize}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\definecolor{Blue}{rgb}{0.2,0.2,0.9}
+\definecolor{Green}{rgb}{0,0.6,0}
+\definecolor{Gray}{rgb}{0.5,0.5,0.5}
+\definecolor{Purple}{rgb}{0.58,0,0.82}
+\definecolor{background}{rgb}{0.95,0.95,0.92}
+
+\definecolor{bashtext}{rgb}{0.9,0.9,0.9}
+\definecolor{bashbackground}{rgb}{0.3,0.3,0.3}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{background},   
+    commentstyle=\color{Green},
+    keywordstyle=\color{Blue},
+    numberstyle=\tiny\color{Gray},
+    stringstyle=\color{Purple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\newcommand{\ttt}{\texttt}
+
+\newcommand{\tcpp}[1]{\colorbox{background}{\textcolor{black}{\texttt{#1}}}}
+\newcommand{\tbash}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{\%~~#1}}}}
+\newcommand{\troot}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{root[~]~~#1}}}}
+
+\setlength{\parindent}{0pt}
 
 \title{Appunti Lezione 01}
 \author{Lorenzo Visca}
@@ -9,6 +51,40 @@
 
 \maketitle
 
-Test di compilazione locale \LaTeX.
+\section{Gestione di file input/output}
+Codice di riferimento: \ttt{ioexample.C} \vspace{10pt}
+
+La classe \ttt{fstream} permette di gestire file in input e output. I file sono associati alle variabili \ttt{in} e \ttt{fout} alle righe 9 e 16.
+Il blocco di codice tra le righe 9 e 21 si occupa dell'apertura dei file con eventuale controllo degli errori.
+
+Per leggere un valore dal file di input si usa il comando \ttt{>>}, che è \textit{overloaded} per la classe \ttt{fstream}:
+
+\hspace{10pt}\tcpp{in >> variabile;}
+
+Per scrivere un valore sul file di output si usa il comando \ttt{<<}, anch'esso \textit{overloaded} per la classe \ttt{fstream}:
+
+\hspace{10pt}\tcpp{fout << variabile;}
+
+Dopo aver finito di usare i file, è buona norma chiuderli con il comando \ttt{close()}.
+\vspace{5pt}
+
+Il codice \ttt{ioexample.C} prende in input il nome del file di input e il nome del file di output, dopodiché legge coppie di numeri contenute nel file di input e le trascrive nel file di output.
+
+\section{Utilizzo delle macro di ROOT}
+Le macro di ROOT vengono convenzionalmente salvate con estensione \ttt{.C} e possono essere eseguite direttamente nell'interprete di ROOT. Per caricare il file \ttt{ioexample.C} nell'interprete di ROOT, si usa il comando \ttt{.L}, quindi si può eseguire la macro passandole come argomento i nomi dei file di input e di output come richiesto dalla funzione alla riga 7:
+\vspace{5pt}
+
+\troot{.L ioexample.C}
+
+\troot{ioexample("input.dat","output.dat")}
+\vspace{5pt}
+
+Dove i file \ttt{input.dat} e \ttt{output.dat} si trovano nella stessa cartella della macro. In alternativa, si possono specificare i percorsi assoluti o relativi dei file. Convenzionalmente si usa l'estensione \ttt{.dat} per i file contenenti dati numerici separati da spazi.
+
+\newpage
+\section{Codici}
+
+\ttt{ioexample.C}
+\lstinputlisting[language=C++]{../ioexample.C}
 
 \end{document}
