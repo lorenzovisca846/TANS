@@ -3,3 +3,9 @@
 *.so
 *~
 pyroot_env/**
+
+*.aux
+*.log
+*.synctex.gz
+*.fdb_latexmk
+*.fls
