@@ -37,20 +37,18 @@
 
 \newcommand{\ttt}{\texttt}
 
-\newcommand{\tcpp}[1]{\colorbox{background}{\textcolor{black}{\texttt{#1}}}}
+\newcommand{\tcpp}[1]{\hspace{10pt}\colorbox{background}{\textcolor{black}{\texttt{#1}}}}
 \newcommand{\tbash}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{\%~~#1}}}}
 \newcommand{\troot}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{root[~]~~#1}}}}
 
 \setlength{\parindent}{0pt}
 
 \title{Appunti Lezione 01}
-\author{Lorenzo Visca}
 \date{}
 
 \begin{document}
 
 \maketitle
-
 \section{Gestione di file input/output}
 Codice di riferimento: \ttt{ioexample.C} \vspace{10pt}
 
@@ -59,11 +57,11 @@ Il blocco di codice tra le righe 9 e 21 si occupa dell'apertura dei file con eve
 
 Per leggere un valore dal file di input si usa il comando \ttt{>>}, che è \textit{overloaded} per la classe \ttt{fstream}:
 
-\hspace{10pt}\tcpp{in >> variabile;}
+\tcpp{in >> variabile;}
 
 Per scrivere un valore sul file di output si usa il comando \ttt{<<}, anch'esso \textit{overloaded} per la classe \ttt{fstream}:
 
-\hspace{10pt}\tcpp{fout << variabile;}
+\tcpp{fout << variabile;}
 
 Dopo aver finito di usare i file, è buona norma chiuderli con il comando \ttt{close()}.
 \vspace{5pt}
@@ -71,6 +69,8 @@ Dopo aver finito di usare i file, è buona norma chiuderli con il comando \ttt{c
 Il codice \ttt{ioexample.C} prende in input il nome del file di input e il nome del file di output, dopodiché legge coppie di numeri contenute nel file di input e le trascrive nel file di output.
 
 \section{Utilizzo delle macro di ROOT}
+Codice di riferimento: \ttt{ioexample.C} \vspace{10pt}
+
 Le macro di ROOT vengono convenzionalmente salvate con estensione \ttt{.C} e possono essere eseguite direttamente nell'interprete di ROOT. Per caricare il file \ttt{ioexample.C} nell'interprete di ROOT, si usa il comando \ttt{.L}, quindi si può eseguire la macro passandole come argomento i nomi dei file di input e di output come richiesto dalla funzione alla riga 7:
 \vspace{5pt}
 
@@ -84,7 +84,7 @@ Dove i file \ttt{input.dat} e \ttt{output.dat} si trovano nella stessa cartella 
 \newpage
 \section{Codici}
 
-\ttt{ioexample.C}
+\subsection{ioexample.C}
 \lstinputlisting[language=C++]{../ioexample.C}
 
 \end{document}

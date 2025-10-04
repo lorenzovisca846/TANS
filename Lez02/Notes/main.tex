@@ -37,7 +37,7 @@
 
 \newcommand{\ttt}{\texttt}
 
-\newcommand{\tcpp}[1]{\colorbox{background}{\textcolor{black}{\texttt{#1}}}}
+\newcommand{\tcpp}[1]{\hspace{10pt}\colorbox{background}{\textcolor{black}{\texttt{#1}}}}
 \newcommand{\tbash}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{\%~~#1}}}}
 \newcommand{\troot}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{root[~]~~#1}}}}
 
@@ -50,5 +50,121 @@
 \begin{document}
 
 \maketitle
+
+
+\section{Passaggio by reference}
+Codice di riferimento: \ttt{ioexample2.C} \vspace{10pt}
+
+In \ttt{ioexample.C} la macro prende in input i nomi dei file \textit{by value}. In questo modo la macro crea una copia delle stringhe ricevute, ed eventuali modifiche non si riflettono sul file chiamante. La sintassi è:
+
+\tcpp{void ioexample(string fimpName, string foupName)}
+
+In alternativa si può passare la stringa \textit{by reference}, in questo modo non vengono create copie ma si lavora su un puntatore alla stringa originale, eventuali modifiche quindi si riflettono sul valore assunto nel programma chiamante. 
+Se l'oggetto passato non viene modificato è buona norma dichiararlo con il prefisso \ttt{const}, in questo modo si evita che venga modificato accidentalmente. La sintassi è:
+
+\tcpp{void ioexample2(const string\& fimpName, const string\& histName)}
+
+\section{Istogrammi, dichiarazione dinamica}
+Codice di riferimento: \ttt{ioexample2.C} \vspace{10pt}
+
+La classe \ttt{TH1D} permette di creare istogrammi di valori \ttt{double}. La sintassi utilizzata per creare un istogramma è la seguente:
+
+\tcpp{TH1D* hist = new TH1D("hist", "Istogramma", 100, -7., 7.);}
+
+Dove i parametri utilizzati sono:
+\begin{itemize}
+    \item \ttt{"hist"}: nome dell'istogramma, è il nome con cui ROOT gestisce l'istogramma in memoria. Solitamente si usa lo stesso nome dato alla variabile (come in questo caso), ma non è obbligatorio;
+    \item \ttt{"Istogramma"}: titolo dell'istogramma;
+    \item \ttt{100}: numero di bin;
+    \item \ttt{-7.,7.}: valore minimo e valore massimo dell'asse x.
+\end{itemize}
+
+La sintassi \ttt{TH1D* hist = new TH1D(...)} dichiara l'istogramma in modo dinamico: \ttt{hist} è un puntatore ad un oggetto situato nella \textit{heap memory}, più grande della \textit{stack memory}, più piccola e potenzialmente scomoda per oggetti di grandi dimensioni.
+La principale differenza è che gli oggetti nella heap memory non vengono distrutti automaticamente quando si esce dallo scope (ovvero quando si raggiunge la parentesi graffa di chiusura), ma devono essere distrutti manualmente con il comando \ttt{delete} (non facendolo si rischia di creare \textit{memory leaks}):
+
+\tcpp{double* x = new double(3.14);}
+
+\tcpp{delete x;}
+
+Questa proprietà della heap memory è fondamentale per visualizzare l'istogramma, che in questo modo non viene cancellato quando termina l'esecuzione della macro.
+In realtà il comando \ttt{delete} non deve essere utilizzato per oggetti ROOT (\texttt{TObject}), in quanto ROOT gestisce automaticamente la memoria degli oggetti creati.
+Se si utilizzasse \ttt{delete} su un \ttt{TObject} poi ROOT proverebbe a sua volta a cancellarlo, generando un errore.
+
+A titolo di esempio, la dichiarazione dello stesso istogramma nella stack memory sarebbe:
+
+\tcpp{TH1D hist("hist", "Istogramma", 100, -7., 7.);}
+
+\newpage
+A livello di sintassi c'è una differenza nell'utilizzo delle member functions delle varie classi ROOT:
+\begin{itemize}
+    \item se l'oggetto è un puntatore (come nel caso di \ttt{TH1D* hist}), per accedere alle member functions si usa l'operatore \ttt{->}
+
+    \tcpp{TH1D* hist = new TH1D(...);}
+
+    \tcpp{hist->Draw();}
+
+    \vspace{10pt}
+
+    \item mentre se l'oggetto non è un puntatore (come nel caso di \ttt{TH1D hist}) si usa l'operatore \ttt{.}
+
+    \tcpp{TH1D hist(...);}
+
+    \tcpp{hist.Draw();}
+
+\end{itemize}
+\section{Creazione di file ROOT}
+Codice di riferimento: \ttt{ioexample2.C} \vspace{10pt}
+
+Le righe dalla 31 alla 34 creano un file ROOT e ci salvano all'interno l'istogramma con il comando \ttt{Write();}
+Il file è un oggetto della classe\ttt{TFile}, in questo caso la dichiarazione è statica e quindi la chiusra del file avviene con la sintassi:
+
+\tcpp{file.Close();}
+
+Gli argomenti passati al costruttore della classe \ttt{TFile} sono:
+\begin{itemize}
+    \item il nome del file come array di char (la trasformazione da stringa ad array di char avviene tramite la funzione \ttt{c\_str()}), l'estensione utilizzata per i file ROOT è \ttt{.root};
+    \item la modalità di apertura del file: in questo caso \ttt{"recreate"} indica che se il file esiste già viene sovrascritto, altrimenti viene creato.
+\end{itemize}
+
+La funzione \ttt{Write()} salva automaticamente l'istogramma all'interno della current working directory, che in questo caso è il file appena creato.
+
+
+La macro creata viene caricata ed eseguita tramite:
+
+\vspace{5pt}
+
+\troot{.L ioexample.C}
+
+\troot{ioexample("input.dat","output.dat")}
+\vspace{5pt}
+
+
+\section{Gestione alternativa dei file ROOT}
+Codice di riferimento: \ttt{ioexbis.C} \vspace{10pt}
+
+In \ttt{ioexample2.C} il \ttt{TFile} viene creato dopo l'istogramma, e il salvataggio avviene tramite la member function \ttt{Write()} dell'istogramma.
+
+Questa tecnica diventa scomoda se si vogliono salvare numerosi oggetti nel file, in quanto bisognerebbe chiamare \ttt{Write()} per ogni oggetto.
+Un'alternativa è dichiarare il file prima dell'istogramma, in questo modo ogni oggetto creato successivamente si trova nella working directory del file,
+è quindi possibile salvare tutti gli oggetti in un colpo solo chiamando \ttt{file.Write();} (riga 32).
+
+NOTA: se l'istogramma fosse stato dichiarato nella stack, per salvarlo nel file sarebbe stato necessario utilizzare:
+
+\tcpp{hist.DrawCopy();}
+
+il comando \ttt{DrawCopy()} infatti (a differenza del comando \ttt{Draw()}) crea una copia dell'oggetto nella heap che a questo punto sopravvive all'uscita dallo scope.
+
+
+
+\newpage
+\section{Codici}
+
+\subsection{ioexample2.C}
+\lstinputlisting[language=C++]{../ioexample2.C}
+
+\newpage
+
+\subsection{ioexbis.C}
+\lstinputlisting[language=C++]{../ioexbis.C}
 
 \end{document}
