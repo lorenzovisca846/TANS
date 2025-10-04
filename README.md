@@ -1,0 +1,2 @@
+# Importante: regole di buona programmazione - nomi dei file
+La maggior parte dei file che negli appunti chiamo "output" a lezione si chiamava "pippo" o simili, con una menzione d'onore a "cicio2". Mi rendo conto di essere una persona noiosa.

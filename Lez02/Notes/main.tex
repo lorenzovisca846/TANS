@@ -60,6 +60,7 @@ In \ttt{ioexample.C} la macro prende in input i nomi dei file \textit{by value}.
 \tcpp{void ioexample(string fimpName, string foupName)}
 
 In alternativa si può passare la stringa \textit{by reference}, in questo modo non vengono create copie ma si lavora su un puntatore alla stringa originale, eventuali modifiche quindi si riflettono sul valore assunto nel programma chiamante. 
+
 Se l'oggetto passato non viene modificato è buona norma dichiararlo con il prefisso \ttt{const}, in questo modo si evita che venga modificato accidentalmente. La sintassi è:
 
 \tcpp{void ioexample2(const string\& fimpName, const string\& histName)}
@@ -80,6 +81,7 @@ Dove i parametri utilizzati sono:
 \end{itemize}
 
 La sintassi \ttt{TH1D* hist = new TH1D(...)} dichiara l'istogramma in modo dinamico: \ttt{hist} è un puntatore ad un oggetto situato nella \textit{heap memory}, più grande della \textit{stack memory}, più piccola e potenzialmente scomoda per oggetti di grandi dimensioni.
+
 La principale differenza è che gli oggetti nella heap memory non vengono distrutti automaticamente quando si esce dallo scope (ovvero quando si raggiunge la parentesi graffa di chiusura), ma devono essere distrutti manualmente con il comando \ttt{delete} (non facendolo si rischia di creare \textit{memory leaks}):
 
 \tcpp{double* x = new double(3.14);}
@@ -112,17 +114,17 @@ A livello di sintassi c'è una differenza nell'utilizzo delle member functions d
     \tcpp{hist.Draw();}
 
 \end{itemize}
-\section{Creazione di file ROOT}
+\section{Creazione di un file ROOT}
 Codice di riferimento: \ttt{ioexample2.C} \vspace{10pt}
 
 Le righe dalla 31 alla 34 creano un file ROOT e ci salvano all'interno l'istogramma con il comando \ttt{Write();}
-Il file è un oggetto della classe\ttt{TFile}, in questo caso la dichiarazione è statica e quindi la chiusra del file avviene con la sintassi:
+il file è un oggetto della classe\ttt{TFile}, in questo caso la dichiarazione è statica e quindi la chiusra del file avviene con la sintassi:
 
 \tcpp{file.Close();}
 
 Gli argomenti passati al costruttore della classe \ttt{TFile} sono:
 \begin{itemize}
-    \item il nome del file come array di char (la trasformazione da stringa ad array di char avviene tramite la funzione \ttt{c\_str()}), l'estensione utilizzata per i file ROOT è \ttt{.root};
+    \item il nome del file come array di char (la trasformazione da \ttt{string} ad array di char avviene tramite la funzione \ttt{c\_str()}), l'estensione utilizzata per i file ROOT è \ttt{.root};
     \item la modalità di apertura del file: in questo caso \ttt{"recreate"} indica che se il file esiste già viene sovrascritto, altrimenti viene creato.
 \end{itemize}
 

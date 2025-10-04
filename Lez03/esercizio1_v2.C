@@ -25,7 +25,7 @@ void esercizio1_v2(const string& fimpName, const string& histName)
     }
     else
     {
-        cout << "Il file " << fimpName << " è vuoto." << endl;
+        cout << "Il file " << fimpName << " e' vuoto." << endl;
         return;
     }
     while(in >> x)

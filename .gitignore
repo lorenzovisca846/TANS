@@ -9,3 +9,5 @@ pyroot_env/**
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+
+notes.txt

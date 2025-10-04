@@ -4,80 +4,19 @@ DA RISCRIVERE IN LATEX
 <R> per il terminale ROOT
 
 
-========================================
-
-Invece che hist.Draw(); dovremmo utilizzare hist.DrawCopy(); perché altrimenti l'oggetto hist muore appena l'esecuzione arriva a "}" e non possiamo più usarlo.
-DrawCopy() crea una copia nell'heap dell'istogramma e la disegna, quindi possiamo usare l'istogramma anche dopo la fine della funzione.
-
-----Salvataggio di eventuali oggetti multipli in un file ROOT
-
-
-    NOTA: se l'istogramma viene creato nella stack il comando Draw() non è sufficiente, ma la funzione corretta è:
-
-        \\\ hist->DrawCopy();
-
-    In questo modo quando si arriva al termine dello scope l'istogramma non si distrugge, poiché DrawCopy ne crea una copia nell'heap che non viene distrutta.
+CREARE SCRIPT SHELL DI PULIZIA
+rm -v *.d
+rm -v *.pcm
+rm -v *.so
+rm -v *~
 
 
-========================================
-Esercitazione 4: dichiarazione dell'istogramma con estremi variabili
-File di riferimento: ioexample2/esercizio1_v1.C     ioexample2/esercizio1_v2.C     ioexample2/dati.dat     ioexample2/pippo.root
 
-----Lettura di un numero variabile di dati in un intervallo non noto
-
-    Per non dichiarare a priori l'intervallo dell'istogramma ci sono due approcci possibili:
-    
-    1) leggere due volte il file: la prima volta si leggono tutti i numeri per identificarne min e max, che vengono utilizzati come estremi.
-        VANTAGGI: risparmio di memoria, poiché non viene creata una copia dei dati
-        SVANTAGGI: maggiore tempo di esecuzione, perché la lettura-scrittura di file rallenta notevolmente le operazioni
-    
-    2) leggere il file identificando min e max, nel frattempo tutti i dati vengono salvati in un vettore poi utilizzato per riempire l'istogramma
-        VANTAGGI: esecuzione più veloce
-        SVANTAGGI: si crea una copia dei dati in memoria, problematico quando l'array è molto lungo
-        
-        La creazione dell'array può essere fatta in due modi:
-        1) STATICO: richiede di sapere a priori il numero di elementi, oppure di inizializzare l'array con una dimensione sicuramente maggiore del numero di dati (sconsigliato)
-        2) DINAMICO: si utilizza un oggetto della classe vector, non richiede la conoscenza a priori del numero di elementi
+A questo punto possiamo lavorare con l'istogramma hh come vogliamo, ad esempio hh->Draw(); per vederlo.
+hh però rimane linkato a miofile, se facciamo miofile->Close(); e delete miofile; perdiamo hh.
+Per evitare questo possiamo fare hh->SetDirectory(NULL); che lo scollega dal file PRIMA di chiudere miofile.
 
 
-----Opzioni di loading delle macro
-
-    Si può compilare la macro utilizzando il compilatore di ROOT:
-
-        <R> .L esercizio1_v1.C++
-
-    Il comando crea uno shared object precompilato. Questa opzione fa la differenza quando si utilizzano codici pesanti: la compilazione è più lenta, ma dopo averla effettuata una volta l'esecuzione è molto più veloce rispetto all'interpretazione.
-    Si può anche utilizzare l'opzione seguente:
-
-        <R> .L esercizio1_v1.C+
-
-    Utilizzando un solo + la macro viene compilata, ma se la shared library esiste ed è aggiornata all'ultima modifica essa non viene ricompilata, risparmiando tempo.
-    Forzare la ricompilazione completa con "++" è utile ad esempio se si fa un upgrade del compilatore.
-
-
-----Apertura dei file ROOT
-
-    Una volta creato un TFile di output (ad esempio pippo.root) ci sono diversi modi per visualizzarlo:
-
-    1) aprire il browser interattivo di ROOT per vedere il file ed effettuare tutte le operazioni possibili sulla finestra:
-
-        <R> new TBrowser();
-
-        In questo modo si apre una finestra interattiva in cui si può navigare tra i file
-
-    2) chiamare il file da un'altra macro:
-
-            \\\ TFile *miofile = new TFile("pippo.root");
-
-            miofile = nome scelto per la variabile
-
-        Per recuperare l'istogramma si utilizza la member function Get() della classe TObject castando l'oggetto chiamato a TH1D (ovvero "forzandone" il tipo)
-
-            \\\ *hh = (TH1D*) miofile->Get("hist");
-
-            hh = nome della variabile puntatore all'istogramma nella nuova macro
-            hist = nome dell'istogramma salvato in origine
-            NOTA: hist è il nome riconosciuto da ROOT (il primo oggetto passato al costruttore dell'istogramma), non il nome della variabile nella vecchia macro
 
         A questo punto si può utilizzare l'istogramma ad esempio con hh->Draw();
         Il problema è che l'istogramma è ancora linkato a miiofile, quindi se si chiude il file con miofile->Close(); si perde accesso all'istogramma.
