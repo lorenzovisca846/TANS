@@ -37,7 +37,7 @@ void esercizio1_v1(const string& fimpName, const string& histName)
     in.clear();
     in.seekg(0, ios::beg);
 
-    cout << "\nDati letti: " << count << "\nEstremi dell'istogramma: (" << min << ", " << max << ")" << "\n\n";
+    cout << "\nDati letti: " << count << "\nValori estremi: (" << min << ", " << max << ")" << "\n\n";
 
     TH1D* hist;
 
