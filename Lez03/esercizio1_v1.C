@@ -40,7 +40,7 @@ void esercizio1_v1(const string& fimpName, const string& histName)
     cout << "\nDati letti: " << count << "\nEstremi dell'istogramma: (" << min << ", " << max << ")" << "\n\n";
 
     TH1D* hist;
-    hist = new TH1D("hist", "Istogramma", 100, min, max);
+    hist = new TH1D("hist", "Istogramma", 100, min-1, max+1);
 
     while(in >> x)
         hist->Fill(x);
