@@ -4,7 +4,7 @@
 #include <TCanvas.h>
 using namespace std;
 
-void esercizio1_v2(const string& fimpName, const string& histName)
+void esercizio1_v2(const string& fimpName, const string& histName, const unsigned int limit = 100000)
 {
     ifstream in(fimpName);
     if (!in)
@@ -22,14 +22,16 @@ void esercizio1_v2(const string& fimpName, const string& histName)
         data.push_back(x);
         min = x;
         max = x;
+        count++;
     }
     else
     {
         cout << "Il file " << fimpName << " e' vuoto." << endl;
         return;
     }
-    while(in >> x)
+    while(in >> x && count < limit)
     {
+        count++;
         data.push_back(x);
         if(x < min) min = x;
         if(x > max) max = x;
