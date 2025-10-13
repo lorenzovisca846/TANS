@@ -155,6 +155,7 @@ Il problema è affrontabile in due modi:
 \end{enumerate}
 
 \section{Soluzione: extra}
+\subsection{Argomenti opzionali nelle funzioni}
 Codice di riferimento: \ttt{esercizio1\_v2.C} \vspace{10pt}
 
 In questo esempio viene data la possibilità di specificare il numero massimo di dati da leggere come argomento opzionale della funzione.
@@ -164,6 +165,21 @@ Per definire un argomento opzionale, è sufficiente assegnargli un valore di def
 
 In questo modo, se la funzione viene chiamata con solo due argomenti, l'argomento \ttt{limit} assumerà il valore di default \ttt{100000}.
 Se invece la funzione viene chiamata con tre argomenti, \ttt{limit} assumerà il valore passato nella chiamata.
+
+\subsection{Metodo alternativo di riempimento}
+Codice di riferimento: \ttt{esercizio1\_v2.C} \vspace{10pt}
+
+Finora la sintassi per riempire un istogramma è stata:
+
+    \tcpp{for(int i=0;i<data.size();i++) hist->Fill(data[i]);}
+
+Un metodo alternativo è utilizzare un \textit{for-each} loop:
+
+    \tcpp{for(auto y:data) hist->Fill(y);}
+
+In questo modo, per ogni elemento \ttt{y} del vettore \ttt{data}, viene eseguita l'istruzione \ttt{Fill(y)}.\\
+Il tipo \ttt{auto} permette al compilatore di dedurre automaticamente il tipo di \ttt{y} in base al tipo degli elementi del vettore \ttt{data}.
+
 
 \newpage
 \section{Soluzione: codici}
