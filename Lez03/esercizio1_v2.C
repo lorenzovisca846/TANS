@@ -14,7 +14,6 @@ void esercizio1_v2(const string& fimpName, const string& histName, const unsigne
     }
 
     double x, min, max;
-    int count = 0;
     vector<double> data; 
 
     if(in >> x)
@@ -22,22 +21,23 @@ void esercizio1_v2(const string& fimpName, const string& histName, const unsigne
         data.push_back(x);
         min = x;
         max = x;
-        count++;
     }
     else
     {
         cout << "Il file " << fimpName << " e' vuoto." << endl;
         return;
     }
-    while(in >> x && count < limit)
+    while(in >> x && data.size() < limit)
     {
-        count++;
         data.push_back(x);
         if(x < min) min = x;
         if(x > max) max = x;
     }
 
     in.close();
+
+    if(data.size() == limit)
+        cout << "WARNING: e' stato raggiunto il limite massimo di " << limit << " dati letti." << endl;
 
     cout << "\nDati letti: " << data.size() << "\nEstremi dell'istogramma: (" << min << ", " << max << ")" << "\n\n";
 
