@@ -154,6 +154,16 @@ Il problema è affrontabile in due modi:
         Inoltre, non è possibile sapere a priori quanto grande deve essere il vettore, quindi si utilizza un vettore dinamico della classe (\ttt{std::vector}).
 \end{enumerate}
 
+\section{Soluzione: extra}
+Codice di riferimento: \ttt{esercizio1\_v2.C} \vspace{10pt}
+
+In questo esempio viene data la possibilità di specificare il numero massimo di dati da leggere come argomento opzionale della funzione.
+Per definire un argomento opzionale, è sufficiente assegnargli un valore di default nella dichiarazione della funzione:
+
+    \tcpp{void esercizio1\_v2(..., const unsigned int limit = 100000)}
+
+In questo modo, se la funzione viene chiamata con solo due argomenti, l'argomento \ttt{limit} assumerà il valore di default \ttt{100000}.
+Se invece la funzione viene chiamata con tre argomenti, il terzo argomento assumerà il valore passato nella chiamata.
 
 \newpage
 \section{Soluzione: codici}
