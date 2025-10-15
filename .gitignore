@@ -9,5 +9,6 @@ pyroot_env/**
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+**/.DS_Store
 
 notes.txt
