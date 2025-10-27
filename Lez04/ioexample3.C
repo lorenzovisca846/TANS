@@ -2,8 +2,6 @@
 #include <TH1D.h>
 #include <TFile.h>
 #include <TCanvas.h>
-
-// Libreria necessaria
 #include <sstream>
 using namespace std;
 
@@ -23,11 +21,10 @@ void ioexample3(const string& fimpName, const string& histName, const unsigned i
 
     bool first = true;
 
-    while(getline(in, line))        //Legge tutta la riga
+    while(getline(in, line))
     {
-        istringstream iss(line);    //Crea uno stream dalla riga
-        while(iss >> x)             //Mette in x i valori validi trovati nella riga prima di un eventuale errore
-                                    //NOTA: se la riga contiene 1 2 3 4 pippo 5 6, mette in x 1,2,3,4 ma poi esce dal while saltando 5, 6
+        istringstream iss(line);
+        while(iss >> x)
         {
             data.push_back(x);
             if (first)

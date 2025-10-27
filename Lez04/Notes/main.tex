@@ -1,10 +1,11 @@
-\documentclass{article}
+\documentclass[10pt]{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{anysize}
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{xcolor}
+
 
 \definecolor{Blue}{rgb}{0.2,0.2,0.9}
 \definecolor{Green}{rgb}{0,0.6,0}
@@ -37,7 +38,7 @@
 
 \newcommand{\ttt}{\texttt}
 
-\newcommand{\tcpp}[1]{\colorbox{background}{\textcolor{black}{\texttt{#1}}}}
+\newcommand{\tcpp}[1]{\hspace{10pt}\colorbox{background}{\textcolor{black}{\texttt{#1}}}}
 \newcommand{\tbash}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{\%~~#1}}}}
 \newcommand{\troot}[1]{\hspace{10pt}\colorbox{bashbackground}{\textcolor{bashtext}{\texttt{root[~]~~#1}}}}
 
@@ -50,5 +51,120 @@
 \begin{document}
 
 \maketitle
+
+\section{Controllo aggiuntivo sulla formattazione dei file}
+Codice di riferimento: \ttt{ioexample3.C} \vspace{10pt}
+
+Può accadere che un file di dati in input contenga delle stringhe di commento o delle righe vuote.
+La libreria \ttt{sstream} permette di gestire questi casi in modo semplice:
+
+\begin{enumerate}
+    \item Il file viene letto riga per riga con la funzione \ttt{getline()}.
+    \item La riga viene convertita in uno stream di stringa \ttt{iss} con la funzione \ttt{istringstream}: in questo modo ogni riga permette di estrarre i dati.
+    \item La sezione di codice che gestisce l'estrazione dei dati viene condizionata a \ttt{(iss >> x)}: in questo modo
+          quando si incontra un valore non numerico (come un commento) la condizione non è più rispettata e si passa alla riga successiva.
+    
+\end{enumerate}
+
+NOTA: se un commento è seguito da altri dati validi nella stessa riga questi ultimi non vengono letti;
+tuttavia i file di dati sono generalmente formattati in modo da non avere questo problema,
+evitando così controlli ulteriori che rallenterebbero la lettura del file.
+
+\section{Esercizio: verifica del teorema del limite centrale}
+Codice di riferimento: \ttt{central.C} \vspace{10pt}
+
+Dato un parametro \( w \in [0, 0.5] \), definiamo la seguente densità di probabilità:
+
+\begin{equation}
+f(x) = \begin{cases}
+\frac{1}{2w} & \text{if } x \in [0,w]\cup[1-w,1] \\
+0 & \text{elsewhere}
+\end{cases}
+\label{eq:dist_w}
+\end{equation}
+
+I momenti di questa distribuzione sono:
+\begin{itemize}
+    \item \(\displaystyle E[x]=\int_{-\infty}^{\infty} x\,f(x)\,dx=\int_0^w \frac{x}{2w}\,dx+\int_{1-w}^1 \frac{x}{2w}\,dx=\tfrac{1}{2}\)
+    \item \(\displaystyle E[x^2]=\int_{-\infty}^{\infty} x^2\,f(x)\,dx=\int_0^w \frac{x^2}{2w}\,dx+\int_{1-w}^1 \frac{x^2}{2w}\,dx=\tfrac{1}{6}(2w^2-3w+3)\)
+    \item \(\displaystyle V[x]=E[x^2]-E[x]^2=\tfrac{1}{6}(2w^2-3w+3)-\tfrac{1}{4}\)
+\end{itemize}
+
+\vspace{10pt}
+
+L'esercizio consiste nell'estrarre campioni della somma di N valori di x estratti da questa distribuzione, e verificare che la distribuzione della somma tende a una gaussiana al crescere di N (teorema del limite centrale).
+Per ogni valore di N si utilizza un campione di \(2 \times 10^6\) estrazioni.
+
+Viene inoltre richiesto di verificare che la media e la varianza della distribuzione della somma siano coerenti con i valori attesi:
+\begin{itemize}
+    \item \(\displaystyle E[S] = N\cdot E[x] \)
+    \item \(\displaystyle V[S] = N\cdot V[x] \)
+\end{itemize}
+
+
+\section{Generazione di numeri casuali}
+Codice di riferimento: \ttt{central.C} \vspace{10pt}
+
+le funzioni generatrici di numeri casuali sono di fatto funzioni che estraggono un valore da una lista di numeri pre-calcolati.
+In questo senso i numeri generati sono detti pseudo-casuali: l'unica garanzia è data da una distribuzione sufficientemente caotica dei numeri in questa lista, e una lunghezza sufficiente a non avere pattern ripetuti.
+
+Alla prima estrazione viene scelto un punto di partenza nella lista, detto seed, e da questo punto in poi i numeri vengono estratti in sequenza: se il seed è lo stesso, la sequenza di numeri estratti sarà la stessa.
+
+La sintassi per la generazione di numeri casuali in ROOT, gestita dalla libreria \ttt{TRandom3}, è la seguente:
+
+\vspace{10pt}
+
+\tcpp{TRandom3 *myptr = new TRandom3(seed);}
+
+\tcpp{double x = myptr->Rndm();}
+
+\vspace{10pt}
+
+Dove \ttt{Rndm()} estrae un numero uniformemente distribuito nell'intervallo \([0,1]\).
+
+Se si devono generare più sequenze di numeri casuali, inizializzando generatori distinti c'è il rischio che i seed siano troppo vicini e le sequenze risultino quindi correlate.
+
+Per evitare questo problema si può utilizzare un unico generatore globale in modo che tutte le estrazioni vengano fatte sequenzialmente;
+in ROOT questo generatore è accessibile tramite il puntatore globale \ttt{gRandom} (in generale i puntatori globali in ROOT iniziano con la lettera \ttt{g}):
+
+\vspace{10pt}
+
+\tcpp{double x = gRandom->Rndm();}
+
+\subsection{Estrazione dalla distribuzione scelta}
+
+Dalla teoria delle distribuzioni di probabilità sappiamo che data una variabile \(x\) con distribuzione \(f(x)\) e distribuzione cumulativa \(F(x)\), la variabile \(r=F(x)\) è distribuita uniformemente nell'intervallo \([0,1]\).
+
+Di conseguenza, estraendo una variabile \(r\) uniformemente distribuita in \([0,1]\) si può campionare una variabile \(x\) da una distribuzione arbitraria calcolando \(x=F^{-1}(r)\), quando la funzione \(F\) è invertibile.
+
+Nel caso della distribuzione definita in \eqref{eq:dist_w}, la funzione cumulativa è:
+\begin{equation*}
+F(x) = \begin{cases}
+    \frac{x}{2w} & \text{se } x \in [0,w] \\
+    \frac{1}{2} + \frac{x - (1 - w)}{2w} & \text{se } x \in [1-w,1] \\
+\end{cases}
+\end{equation*}
+
+La funzione inversa con cui si estrae \(x\) da \(r\) è quindi:
+\begin{equation*}
+x = F^{-1}(r) =
+\begin{cases}
+    2wr & \text{se } r \in [0, \tfrac{1}{2}] \\
+    1 - 2w(1 - r) & \text{se } r \in [\tfrac{1}{2}, 1] \\
+\end{cases}
+\end{equation*}
+
+La funzione \ttt{randomeff()} implementa una versione più efficiente di questa estrazione con il cambio di variabile \(r' = 2wr\), in modo da evitare una moltiplicazione risparmiando tempo di calcolo.
+
+\newpage
+\section{Codici}
+
+\subsection{ioexample3.C}
+\lstinputlisting[language=C++]{../ioexample3.C}
+
+\newpage
+
+\subsection{central.C}
+\lstinputlisting[language=C++]{../central.C}
 
 \end{document}

@@ -44,12 +44,36 @@
 
 \setlength{\parindent}{0pt}
 
-\title{Appunti Lezione 00}
+\title{Appunti Lezione 05}
 \author{Lorenzo Visca}
 \date{}
 
 \begin{document}
 
 \maketitle
+
+\section{Soluzione: verifica del teorema del limite centrale}
+Codice di riferimento: \ttt{centralSol.C} \vspace{10pt}
+
+Il codice di riferimento implementa alcune migliorie rispetto a quello fatto come esercizio:
+
+\begin{itemize}
+    \item La macro prende come argomento extra una stringa, a seconda del valore passatole il programma utilizza una diversa funzione per generare i numeri casuali.
+          La funzione \ttt{randomlong}, presentata a titolo di esempio, è un metodo più inefficiente che rifiuta i numeri estratti se non rientrano nell'intervallo desiderato.
+          Per scegliere la funzione da utilizzare si definisce il puntatore a funzione \ttt{randFunc} che viene inizializzato in base al valore della stringa passata come argomento.
+    \item Si utilizza un seed fisso per il generatore di numeri casuali in modo da poter riprodurre i risultati ottenuti in caso di necessità (debugging).
+    \item Viene creato un array di istogrammi per gestirli in modo più efficiente.
+    \item Gli istogrammi hanno normalmente un range $5\sigma$, ma sono stati aggiustati per evitare di uscire dai limiti fisici dell'istogramma (0 e N).
+    \item Viene utilizzata un'unica somma cumulativa per tutti gli istogrammi, inserendo il valore calcolato nell'istogramma corretto in base al numero di estrazioni corrispondente.
+\end{itemize}
+
+\newpage
+
+\newpage
+\section{Codici}
+
+\subsection{centralSol.C}
+\lstinputlisting[language=C++]{../centralSol.C}
+
 
 \end{document}
