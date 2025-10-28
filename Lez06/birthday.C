@@ -18,10 +18,11 @@ double theoprob(int n)
     return 1.0 - TMath::Exp(TMath::LnGamma(kYear+1) - TMath::LnGamma(kYear+1 - n) - log((double)kYear) * (double)n);
 }
 
-void birthday(const int trials = 100000, unsigned int seed = 12345)
+void birthday(const int events = 100000, unsigned int seed = 12345)
 {
     gRandom->SetSeed(seed);
     gStyle->SetOptStat(0);
+    cout << std::scientific << std::setprecision(1);
 
     bool shared_birthday[kYear];
     bool found;
@@ -29,7 +30,7 @@ void birthday(const int trials = 100000, unsigned int seed = 12345)
 
     for(int i=0;i<kPeople;i++)  probabilities[i] = 0.;
     
-    for(int i=0;i<trials;i++)
+    for(int i=0;i<events;i++)
     {
         for(int j=0;j<kYear;j++) shared_birthday[j] = false;
 
@@ -46,16 +47,21 @@ void birthday(const int trials = 100000, unsigned int seed = 12345)
             }
             shared_birthday[day] = true;
         }
+        if (i > 0 && i % (int)1e6 == 0)
+            cout << "Trial " << (double)i << endl;
     }
 
-    TCanvas *c1 = new TCanvas("c1", "Birthday Problem Simulation", 800, 600);
+    TCanvas *c1 = new TCanvas("c1", "Birthday Problem Simulation", 1700, 600);
+    c1->Divide(2,1);
+    c1->cd(1);
+
     TH1D *h1 = new TH1D("h1", "Birthday Problem", kPeople, 1, kPeople);
 
     for (int n = 1; n <= kPeople; n++)
         h1->SetBinContent(n, theoprob(n));
 
     TH1D *h2 = new TH1D("h2", "Birthday Problem", kPeople, 1, kPeople);
-    for(int i=1;i<=kPeople;i++) h2->SetBinContent(i,probabilities[i-1]/(double)trials);
+    for(int i=1;i<=kPeople;i++) h2->SetBinContent(i,probabilities[i-1]/(double)events);
 
     h1->GetXaxis()->SetTitle("Number of people");
     h1->GetYaxis()->SetTitle("Probability of shared birthday");
@@ -71,19 +77,26 @@ void birthday(const int trials = 100000, unsigned int seed = 12345)
     h2->SetMarkerSize(0.5);
     h2->Draw("P SAME");
 
-    auto legend = new TLegend(0.55, 0.15, 0.85, 0.3);
+    auto legend = new TLegend(0.65, 0.10, 0.90, 0.25);
     legend->AddEntry(h1, "Theoretical", "l");
     legend->AddEntry(h2, "Simulated", "p");
     legend->Draw();
 
-
-
-    TCanvas *cr = new TCanvas("cr", "Birthday Problem Residuals", 800, 600);
+    c1->cd(2);
     TH1D *hr = new TH1D("hr", "Birthday Problem Residuals", kPeople, 1, kPeople);
 
-    for(int i=1;i<=kPeople;i++) hr->SetBinContent(i,fabs(probabilities[i-1]/(double)trials - theoprob(i)));
+    for(int i=1;i<=kPeople;i++)
+    {
+        double res;
+        if(i==1) res = probabilities[0];
+        else res = fabs((probabilities[i-1]/(double)events - theoprob(i))/theoprob(i));
+
+        hr->SetBinContent(i,res);
+    }
+
     hr->GetXaxis()->SetTitle("Number of people");
-    hr->GetYaxis()->SetTitle("Absolute Residuals");
+    hr->GetYaxis()->SetTitle("Relative Errors");
+    hr->GetYaxis()->SetMaxDigits(3);
     hr->SetMarkerColor(kRed);
     hr->SetMarkerStyle(8);
     hr->SetMarkerSize(0.5);
