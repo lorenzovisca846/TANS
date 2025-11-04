@@ -10,13 +10,11 @@
 
 using namespace std;
 
-const int kPeople = 100;
-const int kYear = 365;
+constexpr int kPeople = 100;
+constexpr int kYear = 365;
 
-double theoprob(int n)
-{
-    return 1.0 - TMath::Exp(TMath::LnGamma(kYear+1) - TMath::LnGamma(kYear+1 - n) - log((double)kYear) * (double)n);
-}
+double theoprob(int);
+int GetDay();
 
 void birthday(const int events = 100000, unsigned int seed = 12345)
 {
@@ -38,7 +36,7 @@ void birthday(const int events = 100000, unsigned int seed = 12345)
 
         for(int j=0;j<kPeople && !found;j++)
         {
-            int day = gRandom->Integer(kYear);
+            int day = GetDay();
 
             if(shared_birthday[day])
             {
@@ -102,4 +100,16 @@ void birthday(const int events = 100000, unsigned int seed = 12345)
     hr->SetMarkerSize(0.5);
     hr->Draw("P");
 
+}
+
+
+double theoprob(int n)
+{
+    static double factDays = TMath::LnGamma(kYear+1);
+    return 1.0 - TMath::Exp(factDays - TMath::LnGamma(kYear+1 - n) - log((double)kYear) * (double)n);
+}
+
+int GetDay()
+{
+    return gRandom->Integer(kYear);
 }
