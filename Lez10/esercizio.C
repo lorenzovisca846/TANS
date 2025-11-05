@@ -12,12 +12,13 @@
 
 using namespace std;
 
-//0.5, 100000
-//0.001, 100000
-
 //Remember to load .L MyRandom.cxx+ 
 
-void esercizio(double alpha=0.5, int Nsim=1e5)
+
+void esercizio(double alpha=0.5, int Nsim=1e5);
+//void esercizio(double alpha=0.001, int Nsim=1e5);
+
+void esercizio(double alpha, int Nsim)
 {
     TCanvas *c1 = new TCanvas("c1", "Random Number Generation", 1500, 1200);
     c1->Divide(2,2);
@@ -93,7 +94,7 @@ void esercizio(double alpha=0.5, int Nsim=1e5)
     hinversion1->SetLineColor(kBlue);
     hfunction1->SetLineColor(kGreen);
 
-    hinversion1->SetTitle(Form("Comparison of Methods, #alpha = %f", alpha));
+    hinversion1->SetTitle(Form("Comparison, #alpha = %f", alpha));
     hinversion1->GetXaxis()->SetTitle("#theta");
     hinversion1->GetYaxis()->SetTitle("f(#theta)");
     hinversion1->Draw("HIST");
