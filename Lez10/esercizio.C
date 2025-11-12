@@ -30,9 +30,9 @@ void esercizio(double alpha, int Nsim)
     double xmax = 2.*M_PI;
     int nbins = 200;
 
-    TH1D* hrejection = new TH1D("hrejection", Form("Rejection Method, #alpha = %f", alpha), nbins, xmin, xmax);
-    TH1D* hinversion = new TH1D("hinversion", Form("Inversion Method, #alpha = %f", alpha), nbins, xmin, xmax);
-    TH1D* hfunction = new TH1D("hfunction", Form("ROOT Standard Method, #alpha = %f", alpha), nbins, xmin, xmax);
+    TH1D* hrejection = new TH1D("hrejection", Form("Rejection, #alpha = %f, N = %d", alpha, Nsim), nbins, xmin, xmax);
+    TH1D* hinversion = new TH1D("hinversion", Form("Inversion, #alpha = %f, N = %d", alpha, Nsim), nbins, xmin, xmax);
+    TH1D* hfunction = new TH1D("hfunction", Form("ROOT Standard, #alpha = %f, N = %d", alpha, Nsim), nbins, xmin, xmax);
 
     TF1* func = static_cast<TF1*>(myrand.GetFunc().Clone("func"));
     func->SetNpx(1000);
@@ -60,26 +60,27 @@ void esercizio(double alpha, int Nsim)
     cout << "ROOT standard method time: " << timer.RealTime() << " s" << endl;
 
     double norm = func->Integral(xmin, xmax) / ((xmax-xmin)/(double)nbins * Nsim);
+
     hrejection->Scale(norm);
     hinversion->Scale(norm);
     hfunction->Scale(norm);
 
     c1->cd(1);
-    hrejection->SetLineColor(kOrange+7);
+    hrejection->SetLineColor(kRed);
     hrejection->GetXaxis()->SetTitle("#theta");
     hrejection->GetYaxis()->SetTitle("f(#theta)");
     hrejection->Draw("HIST");
     func->Draw("SAME");
 
     c1->cd(2);
-    hinversion->SetLineColor(kOrange+7);
+    hinversion->SetLineColor(kBlue);
     hinversion->GetXaxis()->SetTitle("#theta");
     hinversion->GetYaxis()->SetTitle("f(#theta)");
     hinversion->Draw("HIST");
     func->Draw("SAME");
 
     c1->cd(3);
-    hfunction->SetLineColor(kOrange+7);
+    hfunction->SetLineColor(kGreen);
     hfunction->GetXaxis()->SetTitle("#theta");
     hfunction->GetYaxis()->SetTitle("f(#theta)");
     hfunction->Draw("HIST");
@@ -94,7 +95,7 @@ void esercizio(double alpha, int Nsim)
     hinversion1->SetLineColor(kBlue);
     hfunction1->SetLineColor(kGreen);
 
-    hinversion1->SetTitle(Form("Comparison, #alpha = %f", alpha));
+    hinversion1->SetTitle(Form("Comparison, #alpha = %f, N = %d", alpha, Nsim));
     hinversion1->GetXaxis()->SetTitle("#theta");
     hinversion1->GetYaxis()->SetTitle("f(#theta)");
     hinversion1->Draw("HIST");

@@ -10,19 +10,17 @@ class MyRandom : public TRandom3 {
         MyRandom(double alpha,unsigned int seed);
 
         void SetAlpha(double alpha) {fAlpha=alpha; Func.SetParameter(0, fAlpha);}
-        void SetMySeed(unsigned int seed) {fSeed=seed; gRandom->SetSeed(seed);}
 
-        double Rejection() const;
-        double Inversion() const;
+        double Rejection();
+        double Inversion();
         double FromFunc();                              // Cannot be const because of GetRandom(), could be defined as const but cloning the function would be slower
         const TF1& GetFunc() const {return Func;}       // Const getter, only for cloning
 
     private:
         double fAlpha;
-        unsigned int fSeed;
         double Fmax(double theta) const;
 
-        TF1 Func;
+        TF1 Func;     //   1 /(sin(x)^2 + alpha*cos(x)^2)
 
     ClassDef(MyRandom,1);
 };
